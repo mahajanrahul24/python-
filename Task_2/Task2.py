@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Tue Nov  6 14:33:45 2018
 Feature extraction and activity detection using AndroSensor.
@@ -7,13 +6,11 @@ Data is imported and visualozed using pandas and matplolib libearies.
 Feature isextracted using sliding window and activity is evaluated.
 
 Feature Extracted from 'stairs_n_jumps.csv':
-        1. Number of stairs 
+        1. Number of stairs
         2. Number of jumps
-        3. Noise during walking 
-        
+        3. Source of noise
 @author: rahulm99
 """
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -54,10 +51,28 @@ SOUND = DATA_FIELD['SOUND LEVEL']
 plt.title('SOUND LEVEL')
 plt.plot(DATA_FIELD.index, SOUND)
 plt.show()
-
-SOUND_LEVEL = peak_counter(0, 250, 'SOUND LEVEL', 65)
-#number of peaks observed above 65dB sound level.
-#Most of the TIME sound level is greater than 65dB
-#According to noise level, concluion is made as Conversation in office or restaurant.
-if SOUND_LEVEL > 25:
-    print("Conevrsation is going on ")
+'''
+To check the sound lvevl.
+We used http://www.industrialnoisecontrol.com/comparative-noise-examples.htm
+database.
+'''
+print("Source of NOISE: ")
+if np.mean(SOUND) < 10:
+    print("Breathing")
+elif np.mean(SOUND) < 20:
+    print("Whisper, rustling leaves")
+elif np.mean(SOUND) < 30:
+    print("Quiet rural area")
+elif np.mean(SOUND) < 40:
+    print("Library, bird calls")
+elif np.mean(SOUND) < 50:
+    print("Quiet suburb, conversation at home")
+elif np.mean(SOUND) < 60:
+    print("Conversation in restaurant, office, background music, Air conditioning unit")
+elif np.mean(SOUND) < 70:
+    print("Passenger car at 65 mph at 25 ft")
+elif np.mean(SOUND) < 80:
+    print("Garbage disposal, dishwasher, average factory, freight train (at 15 meters)")
+else:
+    print("Above 80 dB. More noise.")
+    
