@@ -16,18 +16,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import find_peaks
 
-def peak_counter(lower_bound, upper_bound, column, threshold):
+def peak_counter(column, threshold):
     ''' Calculate peak points within given range and threshold.
         Works as sliding window function to select the range.
         In:
-            lower_bound: integer lower limit in range
-            upper_bound: integer upper bound in limit
             column: string value for column
             threshold: integer value to eliminate lower values
         Return:
             Number of peaks in given range
     '''
-    filtered_data = DATA_FIELD[column].iloc[lower_bound:upper_bound]
+    #filtered_data = DATA_FIELD[column].iloc[lower_bound:upper_bound]
+    filtered_data = (DATA_FIELD[column] - DATA_FIELD[column].mean())#/DATA_FIELD[column].std()
     peak, _ = find_peaks(filtered_data, height=threshold)
     num_peak = len(peak)
     return num_peak
@@ -44,8 +43,8 @@ DATA_FIELD['ACC_RMS'] = np.sqrt(DATA_FIELD['ACCELEROMETER X'] **2 + DATA_FIELD['
 plt.plot(DATA_FIELD.index, DATA_FIELD['ACC_RMS'])
 plt.show()
 
-print("Number of steps : ", peak_counter(0, 100, 'ACC_RMS', 11))
-print("Number of jumps : ", peak_counter(100, 150, 'ACC_RMS', 14))
+print("Number of stairs : ", peak_counter('ACC_RMS', 2))
+print("Number of jumps : ", peak_counter('ACC_RMS', 6))
 
 SOUND = DATA_FIELD['SOUND LEVEL']
 plt.title('SOUND LEVEL')
