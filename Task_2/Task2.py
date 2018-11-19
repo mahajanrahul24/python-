@@ -25,7 +25,6 @@ def peak_counter(column, threshold):
         Return:
             Number of peaks in given range
     '''
-    #filtered_data = DATA_FIELD[column].iloc[lower_bound:upper_bound]
     filtered_data = (DATA_FIELD[column] - DATA_FIELD[column].mean())
     peak, _ = find_peaks(filtered_data, height=threshold)
     num_peak = len(peak)
