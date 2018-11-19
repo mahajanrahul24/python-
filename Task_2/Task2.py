@@ -16,21 +16,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import find_peaks
 
-def peak_counter(column, threshold):
-    ''' Calculate peak points within given range and threshold.
-        Works as sliding window function to select the range.
-        In:
-            column: string value for column
-            threshold: integer value to eliminate lower values
-        Return:
-            Number of peaks in given range
-    '''
-    #filtered_data = DATA_FIELD[column].iloc[lower_bound:upper_bound]
-    filtered_data = (DATA_FIELD[column] - DATA_FIELD[column].mean())#/DATA_FIELD[column].std()
-    peak, _ = find_peaks(filtered_data, height=threshold)
-    num_peak = len(peak)
-    return num_peak
-
 #import the sensor data from .csv file
 DATA_FIELD = pd.read_csv('stairs_n_jumps.csv')
 
@@ -39,16 +24,37 @@ ACC_Y = DATA_FIELD['ACCELEROMETER Y']
 ACC_Z = DATA_FIELD['ACCELEROMETER Z']
 
 #New column is added in dataframe, contains RMS value of accelerometer of all three axis.
-DATA_FIELD['ACC_RMS'] = np.sqrt(DATA_FIELD['ACCELEROMETER X'] **2 + DATA_FIELD['ACCELEROMETER Y'] ** 2 + DATA_FIELD['ACCELEROMETER Z'] **2)
+DATA_FIELD['ACC_RMS'] = np.sqrt(ACC_X **2 + ACC_Y ** 2 + ACC_Z **2)
+ACC_RMS = DATA_FIELD['ACC_RMS']
 plt.plot(DATA_FIELD.index, DATA_FIELD['ACC_RMS'])
+plt.title('ACC_RMS')
 plt.show()
 
-print("Number of stairs : ", peak_counter('ACC_RMS', 2))
-print("Number of jumps : ", peak_counter('ACC_RMS', 6))
+'''
+Calculating number of stairs.
+Filtering the data and normalizing the rms acceleration value.
+and finding the stairs by applying thresholds to both positive and neagtive values.
+'''
+FILTERED_DATA = (ACC_RMS- ACC_RMS.mean())/ACC_RMS.std()
+POS = FILTERED_DATA[FILTERED_DATA > 0.6]
+POS = POS[POS < 2]
+NEG = FILTERED_DATA[FILTERED_DATA < -0.6]
+NEG = NEG[NEG > -2]
+print("Number of Stairs: ", len(POS)+len(NEG))
+
+"""
+Calculating number of Jumps.
+Applying threshold to positve and negative values to calculate graph.
+"""
+POS = FILTERED_DATA[FILTERED_DATA > 2.5]
+NEG = FILTERED_DATA[FILTERED_DATA < -2.5]
+print("Number of Jumps: ", len(POS)+len(NEG))
+
 
 SOUND = DATA_FIELD['SOUND LEVEL']
 plt.title('SOUND LEVEL')
 plt.plot(DATA_FIELD.index, SOUND)
+plt.title('SOUND')
 plt.show()
 '''
 To check the sound lvevl.
@@ -71,7 +77,7 @@ elif np.mean(SOUND) < 60:
 elif np.mean(SOUND) < 70:
     print("Passenger car at 65 mph at 25 ft")
 elif np.mean(SOUND) < 80:
-    print("Garbage disposal, dishwasher, average factory, freight train (at 15 meters)")
+    print("Garbage disPOSal, dishwasher, average factory, freight train (at 15 meters)")
 else:
     print("Above 80 dB. More noise.")
     
