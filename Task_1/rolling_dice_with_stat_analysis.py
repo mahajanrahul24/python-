@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov  6 16:49:00 2018
-
+This is Rolling dice game.
+User can play with positive input i.e. yes and exit the game with negative input i.e. no
+If you have dice number 6 then you get JACKPOT.
 @author: rahulm99
 """
 import random
@@ -24,6 +26,11 @@ print("------------------------------------------")
 for i in range(2):
     input_1 = input("Do you want to roll dice?")
     input_1 = input_1.lower()
+    while input_1 != 'yes' and input_1 != 'y' and input_1 != 'no' and input_1 != 'n':
+        print("Invalid input")
+        print("\nPlease enter Yes or NO")
+        input_1 = input("\nDo you want to play? ")
+        input_1 = input_1.lower()
     if input_1 in ('yes', 'y'):
         if i > 0:
             print("previous number was:", MYLIST[0])
@@ -32,7 +39,7 @@ for i in range(2):
         print("Number on dice is: ", dice_num)
         if dice_num == 6:
             print("JACKPOT")
-    else:
-        print("Run program again and press yes on keyboard")
+    elif input_1 in ('no', 'n'):
+        print("Exiting the GAME")
         break
 print("________________FINISHED__________________")

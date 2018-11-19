@@ -15,8 +15,14 @@ print("You have 2 chances to ROLL the DICE")
 print("------------------------------------------")
 
 for i in range(2):
-    input_1 = input("Do you want to roll dice?")
-    if(input_1=="yes" or input_1=="y" or input_1=="Y" or input_1=="YES"  or input_1=="Yes"):
+    input_1=input("Do you want to play? \n")
+    input_1=input_1.lower()
+    while input_1 != 'yes' and input_1 != 'y' and input_1 != 'no' and input_1 != 'n':
+        print("Invalid input")
+        print("\nPlease enter Yes or NO")
+        input_1=input("\nDo you want to play? ")
+        input_1=input_1.lower() 
+    if(input_1=="yes" or input_1=="y"):
         if(i>0):
             print("previous number was:", mylist[0])        
         dice_num=rolling_dice()
@@ -24,7 +30,8 @@ for i in range(2):
         print ("Number on dice is: ", dice_num)
         if(dice_num==6):
             print("JACKPOT")
-    else:
-        print("Run program again and press yes on keyboard")
-        break
+    elif (input_1=="no" or input_1=="n"):
+        print("Exiting the GAME")
+        break 
+     
 print("________________FINISHED__________________")
